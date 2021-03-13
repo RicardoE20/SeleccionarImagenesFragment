@@ -57,7 +57,8 @@ public class GridViewAdapter extends BaseAdapter
 
         ibtnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 listaImagenes.remove(i);
                 notifyDataSetChanged();
             }

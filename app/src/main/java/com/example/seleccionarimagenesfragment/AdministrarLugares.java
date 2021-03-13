@@ -36,8 +36,6 @@ public class AdministrarLugares extends Fragment
     private EditText EdtNombreLuagar, EdtLocationLugar, EdtDescripcionLugar;
     private GridView GridImgs;
     Uri IMG_uri;
-    boolean Galery = false;
-    int PICK_IMAGE = 100;
 
     GridViewAdapter baseAdapter;
 
@@ -99,20 +97,18 @@ public class AdministrarLugares extends Fragment
 
     public void GaleriaSimple()
     {
-        Intent OpenSimpleGalery = new Intent();
+        Intent OpenSimpleGalery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         OpenSimpleGalery.setType("image/*");
-        OpenSimpleGalery.putExtra(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(OpenSimpleGalery, "Seleccione la aplicación..." ), 10);
     }
 
     public void GaleriaMultiple()
     {
         Intent OpenGalery = new Intent();
-        OpenGalery.setType("image_path/*");
+        OpenGalery.setType("image/*");
         OpenGalery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         OpenGalery.setAction(OpenGalery.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(OpenGalery, "Seleccione las imagenees...") , PICK_IMAGE);
-        Galery = true;
+        startActivityForResult(Intent.createChooser(OpenGalery, "Seleccione las imagenes...") , 1000);
     }
 
     @Override
@@ -120,18 +116,17 @@ public class AdministrarLugares extends Fragment
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK && requestCode == 10)
+        if(resultCode == RESULT_OK)
         {
-            Uri path = data.getData();
-            TvImgSeleccionada.setText(path.toString());
-        }
-
-        if(Galery)
-        {
-            ClipData clipData = data.getClipData();
-
-            if(resultCode == RESULT_OK && requestCode == PICK_IMAGE)
+            if(requestCode == 10)
             {
+                Uri path = data.getData();
+                //TvImgSeleccionada.setText(path.toString());
+            }
+            else if(requestCode == 1000)
+            {
+                ClipData clipData = data.getClipData();
+
                 if(clipData == null)
                 {
                     IMG_uri = data.getData();
@@ -145,13 +140,15 @@ public class AdministrarLugares extends Fragment
                     }
                 }
             }
-            baseAdapter = new GridViewAdapter(getView().getContext(), Lista);
-            GridImgs.setAdapter(baseAdapter);
         }
+
+        baseAdapter = new GridViewAdapter(getView().getContext(), Lista);
+        GridImgs.setAdapter(baseAdapter);
     }
 
-    //OTROS
 
+
+    //OTROS IGNORAR
     public static AdministrarLugares newInstance(String param1, String param2)
     {
         AdministrarLugares fragment = new AdministrarLugares();
