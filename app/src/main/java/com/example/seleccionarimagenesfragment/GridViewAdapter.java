@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class GridViewAdapter extends BaseAdapter
@@ -53,7 +55,7 @@ public class GridViewAdapter extends BaseAdapter
         ImageView ivImagen = view.findViewById(R.id.ivImagen);
         ImageButton ibtnEliminar = view.findViewById(R.id.Delete);
 
-        ivImagen.setImageURI(listaImagenes.get(i));
+        Glide.with(context).load(listaImagenes.get(i)).into(ivImagen);
 
         ibtnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
