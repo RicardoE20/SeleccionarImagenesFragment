@@ -17,7 +17,9 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,11 @@ public class AdministrarLugares extends Fragment
     private TextView TvImgSeleccionada;
     private Button BtnImgPortada, BtnGuardarLugar, BtnListaLugar;
     private ImageButton BtnCargarFotos;
-    private EditText EdtNombreLuagar, EdtLocationLugar, EdtDescripcionLugar;
+    private EditText EdtNombreLugar, EdtLocationLugar, EdtDescripcionLugar;
     private GridView GridImgs;
     Uri IMG_uri;
+    boolean Portada = false;
+    boolean Galery = false;
 
     GridViewAdapter baseAdapter;
 
@@ -71,7 +75,7 @@ public class AdministrarLugares extends Fragment
         GridImgs = getView().findViewById(R.id.GridImgs);
 
         TvImgSeleccionada = getView().findViewById(R.id.TvImgSeleccionada);
-        EdtNombreLuagar = getView().findViewById(R.id.EdtNombreLugar);
+        EdtNombreLugar = getView().findViewById(R.id.EdtNombreLugar);
         EdtLocationLugar = getView().findViewById(R.id.EdtLocationLugar);
         EdtDescripcionLugar = getView().findViewById(R.id.EdtDescripcionLugar);
 
@@ -91,6 +95,25 @@ public class AdministrarLugares extends Fragment
             public void onClick(View v)
             {
                 GaleriaSimple();
+            }
+        });
+
+        BtnGuardarLugar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+               Comprobar();
+            }
+        });
+
+        BtnListaLugar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                /*
+                Intent OpenList = new Intent(AdministrarLugares.this, );
+                startActivity(OpenList);*/
             }
         });
     }
@@ -121,7 +144,7 @@ public class AdministrarLugares extends Fragment
             if(requestCode == 10)
             {
                 Uri path = data.getData();
-                //TvImgSeleccionada.setText(path.toString());
+                Portada = true;
             }
             else if(requestCode == 1000)
             {
@@ -131,6 +154,7 @@ public class AdministrarLugares extends Fragment
                 {
                     IMG_uri = data.getData();
                     Lista.add(IMG_uri);
+                    Galery = true;
                 }
                 else
                 {
@@ -138,6 +162,7 @@ public class AdministrarLugares extends Fragment
                     {
                         Lista.add(clipData.getItemAt(i).getUri());
                     }
+                    Galery = true;
                 }
             }
         }
@@ -146,7 +171,18 @@ public class AdministrarLugares extends Fragment
         GridImgs.setAdapter(baseAdapter);
     }
 
-
+    public boolean Comprobar()
+    {
+        if(Portada && Galery && !EdtNombreLugar.getText().toString().isEmpty() && !EdtLocationLugar.getText().toString().isEmpty() && !EdtDescripcionLugar.getText().toString().isEmpty())
+        {
+            return true;
+        }
+        else
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "Ingrese los datos e imagenes requeridas" , Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
 
     //OTROS IGNORAR
     public static AdministrarLugares newInstance(String param1, String param2)
